@@ -1,11 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef struct linkedList {
-    int value;
-    struct linkedList* prev;
-    struct linkedList* next;
-} linkedList;
+#include "types.h"
 
 linkedList *getLinkedList() {
     linkedList *root = malloc(sizeof(linkedList));
@@ -13,6 +8,18 @@ linkedList *getLinkedList() {
     root->prev = NULL;
     root->next = NULL;
     return root;
+}
+
+linkedList *copyList(linkedList *root) {
+    if (root == NULL) {
+        return NULL;
+    }
+    linkedList *copy = getLinkedList();
+    while (root != NULL) {
+        addValueToList(copy, root->value);
+        root = root->next;
+    }
+    return copy;
 }
 
 void destroyList(linkedList *root) {
@@ -44,6 +51,43 @@ void addToListRec(linkedList *root, int value) {
     } else {
         addToListRec(root->next, value);
     }
+}
+
+linkedList *joinLists(linkedList *first, linkedList *last) {
+    if (first == NULL) {
+        return last;
+    }
+    if (last == NULL) {
+        return first;
+    }
+    linkedList *cfirst = copyList(first);
+    linkedList *clast = copyList(last);
+    linkedList *start = cfirst;
+    while (cfirst->next != NULL) {
+        cfirst = cfirst->next;
+    }
+    cfirst->next = clast;
+    clast->prev = cfirst;
+    return start;
+}
+
+linkedList *addValueToList(linkedList* root, int value) {
+    if (root == NULL) {
+        return NULL;
+    }
+    linkedList *start = root;
+    while (root->next != NULL) {
+        root = root->next;
+    }
+    if (root->value == 0) {
+        root->value = value;
+    } else {
+        linkedList *next = getLinkedList();
+        next->value = value;
+        next->prev = root;
+        root->next = next;
+    }
+    return start;
 }
 
 void addToListLoop(linkedList *root, int argc, int *argv) {
@@ -99,20 +143,4 @@ void printList(linkedList *root) {
       printf("Value %d\n", root->value);
       root = root->next;
   }
-}
-
-int main(int argc, char const *argv[]) {
-    linkedList *list = getLinkedList();
-    addToListRec(list, 1);
-    int *p;
-    int vars[5] = {2, 3, 4, 5, 6};
-    p = vars;
-    addToListLoop(list, 5, p);
-    printList(list);
-    printf("Length: %d\n", listLength(list));
-    removeFromList(list, 3);
-    printList(list);
-    printf("Length: %d\n", listLength(list));
-    destroyList(list);
-    return 0;
 }

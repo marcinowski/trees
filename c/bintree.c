@@ -1,12 +1,6 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-
-typedef struct binTree {
-    int value;
-    struct binTree* leftChild;
-    struct binTree* rightChild;
-} binTree;
+#include "types.h"
 
 binTree *getTree () {
     binTree *a = malloc(sizeof(binTree));;
@@ -15,8 +9,6 @@ binTree *getTree () {
     a->leftChild = NULL;
     return a;
 }
-
-linkedList *a = getLinkedList();
 
 void destroyTree(binTree *root) {
     if (root == NULL) {
@@ -169,62 +161,23 @@ binTree *fromList(int len, int *args) {
     }
     return root;
 }
-//
-// int *toList(binTree *root) {
-//     if (root == NULL) {
-//         return NULL;
-//     }
-//     int *leftChild; int *rightChild;
-//     if (root->leftChild != NULL) {
-//         leftChild = toList(root->leftChild);
-//     } else {
-//         leftChild = NULL;
-//     }
-//     if (root->rightChild != NULL) {
-//         rightChild = toList(root->leftChild);
-//     } else {
-//         rightChild = NULL;
-//     }
-//     int selfValue [1] = {root->value};
-//     int* total = malloc(sizeof(leftChild) + sizeof(selfValue) + sizeof(rightChild));
-//     memcpy(total + length(leftChild) * sizeof(int), selfValue, length(selfValue) * sizeof(int));
-//     memcpy(total + 1, rightChild, length(rightChild) * sizeof(int));
-//     free(leftChild);
-//     free(selfValue);
-//     free(rightChild);
-//     return leftChild;
-// }
-    // memcopy
-//     if (list == NULL) {
-//         return "DUPA hehe";
-//     }
-//     free(leftChild);
-//     free(selfValue);
-//     free(rightChild);
-//     return list;
-// }
 
-int main(int argc, char const *argv[]) {
-    int *p;
-    int vars[5] = {2, 3, 4, 5, 6};
-    p = vars;
-    binTree *root = fromList(5, p);
-    int *list = toList(root);
-    for(int i = 0; i < 3; i++) {
-        printf("%d ", *(list+i));
+linkedList *toList(binTree *root) {
+    if (root == NULL) {
+        return NULL;
     }
-    printf("\n");
-    printf ("Tree length: %d\n", length(root));
-    printf ("Tree depth: %d\n", depth(root));
-    printf ("Tree minimum: %d\n", minimum(root));
-    printf ("Tree maximum: %d\n", maximum(root));
-    for (int i=0; i < 5; i++) {
-        printf ("%d in Tree: %d\n", vars[i], search(root, vars[i]));
+    linkedList *total = getLinkedList();
+    if (root->leftChild != NULL) {
+        linkedList *leftChild = toList(root->leftChild);
+        joinLists(total, leftChild);
+        free(leftChild);
     }
-    printf ("Root value: %d\n", root->value);
-    removeFromTree(root, 4);
-    printf ("4 Not in tree: %d\n", search(root, 4));
-    printf ("Root value: %d\n", root->value);
-    destroyTree(root);
-    return 0;
+    addValueToList(total, root->value);
+    if (root->rightChild != NULL) {
+        linkedList *rightChild = toList(root->rightChild);
+        joinLists(total, rightChild);
+        free(rightChild);
+    }
+    printList(total);
+    return total;
 }
