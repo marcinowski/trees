@@ -13,6 +13,7 @@ linkedList *addValueToList(linkedList* root, int value);
 void addToListLoop(linkedList *root, int argc, int *argv);
 void removeFromList(linkedList *root, int value);
 int listLength(linkedList *root);
+int getIndex(linkedList *root, int index);
 void printList(linkedList *root);
 
 typedef struct binTree {

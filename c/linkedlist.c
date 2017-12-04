@@ -54,10 +54,10 @@ void addToListRec(linkedList *root, int value) {
 }
 
 linkedList *joinLists(linkedList *first, linkedList *last) {
-    if (first == NULL) {
+    if (first == NULL || first->value == 0) {
         return last;
     }
-    if (last == NULL) {
+    if (last == NULL || last->value == 0) {
         return first;
     }
     linkedList *cfirst = copyList(first);
@@ -130,17 +130,34 @@ void removeFromList(linkedList *root, int value) {
 }
 
 int listLength(linkedList *root) {
+    if (root == NULL) {
+        return 0;
+    }
     int length = 0;
-    while (root != NULL) {
+    while (root != NULL && root->value != 0) {
         length++;
         root = root->next;
     }
     return length;
 }
 
+int getIndex(linkedList *root, int index) {
+    while (index > 0) {
+        if (root->next != NULL) {
+            root = root->next;
+            index--;
+        } else {
+            return -1;
+        }
+    }
+    return root->value;
+}
+
 void printList(linkedList *root) {
+    printf("[");
   while (root != NULL) {
-      printf("Value %d\n", root->value);
+      printf("%d, ", root->value);
       root = root->next;
   }
+  printf("]\n");
 }

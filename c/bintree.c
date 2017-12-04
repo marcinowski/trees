@@ -169,15 +169,12 @@ linkedList *toList(binTree *root) {
     linkedList *total = getLinkedList();
     if (root->leftChild != NULL) {
         linkedList *leftChild = toList(root->leftChild);
-        joinLists(total, leftChild);
-        free(leftChild);
+        total = joinLists(total, leftChild);
     }
     addValueToList(total, root->value);
     if (root->rightChild != NULL) {
         linkedList *rightChild = toList(root->rightChild);
-        joinLists(total, rightChild);
-        free(rightChild);
+        total = joinLists(total, rightChild);
     }
-    printList(total);
     return total;
 }
